@@ -9,7 +9,9 @@ import {PageLink} from '../links/Links';
 
 
 const LoginForm = () => {
-  const { register, handleSubmit, watch, errors } = useForm()
+  const { register, handleSubmit, watch, errors } = useForm(
+    {validateCriteriaMode: "all"}
+  )
   const onSubmit = data => { console.log(data) }
 
   return (
@@ -31,7 +33,6 @@ const LoginForm = () => {
             label="First name"
             ref={register({ required: true })}
           />
-          {errors.username && <div className="text-red-500 text-center">This field is required</div>}
          
           <Input 
             type="text" 
@@ -40,8 +41,15 @@ const LoginForm = () => {
             label="Last name"
             ref={register({ required: true })}
           />
-          {errors.username && <div className="text-red-500 text-center">This field is required</div>}
           
+        </div>
+        <div className="grid grid-cols-2 gap-6">
+          <div>
+            {errors.firstname && <div className="text-red-500 text-center">First Name is required</div>}
+          </div>
+          <div>
+            {errors.lastname && <div className="text-red-500 text-center">Last Name is required</div>}
+          </div>
         </div>
 
         <Input 
@@ -50,18 +58,18 @@ const LoginForm = () => {
           defaultValue=""
           label="Username"
           ref={register({ 
-            required: true, 
-            maxLength: {
+            required: "Username is required", 
+            minLength: {
               value: 3,
-              message: "This input exceed maxLength."
+              message: "Must be at least 3 characters long."
             }
           })}
         />
-        <ErrorMessage errors={errors} name="username">
+        <ErrorMessage errors={errors} name="username" >
           {({ messages }) =>
             messages &&
             Object.entries(messages).map(([type, message]) => (
-              <p key={type}>{message}</p>
+              <p key={type} className="text-red-500 text-center">{message}</p>
             ))
           }
         </ErrorMessage>
@@ -71,9 +79,22 @@ const LoginForm = () => {
           name="email"
           defaultValue=""
           label="Email"
-          ref={register({ required: true })}
+          ref={register({ 
+            required: "Please enter a valid email",
+            pattern: {
+              value: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+              message: "Email not valid"
+            }
+           })}
         />
-        {errors.email && <div className="text-red-500 text-center">This field is required</div>}
+        <ErrorMessage errors={errors} name="email">
+          {({ messages }) =>
+            messages &&
+            Object.entries(messages).map(([type, message]) => (
+              <p key={type} className="text-red-500 text-center">{message}</p>
+            ))
+          }
+        </ErrorMessage>
 
         <Input 
           type="password" 
@@ -81,34 +102,21 @@ const LoginForm = () => {
           defaultValue=""
           label="Password"
           ref={register({ 
-            required: {
-              value:true,
-              message: "This field is required"
-            },
-             maxLength: {
+            required: "Password is required",
+             minLength: {
               value: 8,
-              message: "This input exceed maxLength."
+              message: "Must be at least 8 characters."
             }
           })}
         />
-        
-
-        <Input 
-          type="password" 
-          name="cpassword"
-          defaultValue=""
-          label="Confirm Password"
-          ref={register({ 
-            required: {
-              value:true,
-              message: "This field is required"
-            },
-             maxLength: {
-              value: 8,
-              message: "This input exceed maxLength."
-            }
-          })}
-        />
+         <ErrorMessage errors={errors} name="password">
+          {({ messages }) =>
+            messages &&
+            Object.entries(messages).map(([type, message]) => (
+              <p key={type} className="text-red-500 text-center">{message}</p>
+            ))
+          }
+        </ErrorMessage>
 
         <div className="text-center mt-8">
           <FormButtons type="submit" primary>
@@ -117,8 +125,8 @@ const LoginForm = () => {
 
         </div>
 
-        <PageLink href="login">
-          
+        <PageLink href="index" className="text-center">
+          Already have an account? Sign in.
         </PageLink>
 
       </form> 

@@ -12,12 +12,23 @@ const ButtonPrimary = styled(Button)`
   background:  ${primary_color};
   border: solid 1px ${primary_color};
   color: #ffffff;
+  transition: 0.3s ease-out;
+
+  &:hover {
+    background: #43425Dcc;
+    border: solid 1px #43425Dcc;
+  }
 `
 
 const ButtonPlain = styled(Button)`
   background:  #fffff;
   border: solid 1px ${primary_color};
   color: ${primary_color};
+  transition: 0.3s ease-out;
+
+  &:hover {
+    background: #dddddd;
+  }
 `
 
 export const FormButtons = (props) => {

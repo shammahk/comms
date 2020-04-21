@@ -1,4 +1,4 @@
-import { useForm } from 'react-hook-form';
+import { useForm, ErrorMessage } from 'react-hook-form';
 
 import Layout from './layout';
 import {Input} from '../inputFields/formInputs';
@@ -8,7 +8,9 @@ import { Paragraph } from '../text/Text';
 
 
 const LoginForm = () => {
-  const { register, handleSubmit, watch, errors } = useForm()
+  const { register, handleSubmit, watch, errors } = useForm(
+    {validateCriteriaMode: "all"}
+  )
   const onSubmit = data => { console.log(data) }
 
   return (
@@ -29,20 +31,31 @@ const LoginForm = () => {
           label="Username"
           ref={register({ required: true })}
         />
-        {errors.username && <div className="text-red-500 text-center">This field is required</div>}
+        {errors.username && <div className="text-red-500 text-center">Please enter your username</div>}
 
         <Input 
           type="password" 
           name="password"
           defaultValue=""
           label="Password"
-          ref={register({ required: true })}
+          ref={register({ 
+            required: "Password is required",
+            minLength: {
+              value: 8,
+              message: "Must be at least 8 characters."
+            }
+          })}
         />
-        {errors.username && <div className="text-red-500 text-center">This field is required</div>}
+        <ErrorMessage errors={errors} name="password">
+          {({ messages }) =>
+            messages &&
+            Object.entries(messages).map(([type, message]) => (
+              <p key={type} className="text-red-500 text-center">{message}</p>
+            ))
+          }
+        </ErrorMessage>
 
 
-        {/* include validation with required or other standard HTML validation rules */}
-        {/* errors will return when field validation fails  */}
         <div className="text-center mt-8">
           <FormButtons type="submit" primary>
             Login
